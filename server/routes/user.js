@@ -6,3 +6,6 @@ const { searchUsers } = require("../controllers/user");
 router.route("/").get(protect, searchUsers);
 
 module.exports = router;
+
+
+

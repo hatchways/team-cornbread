@@ -32,6 +32,7 @@ export default function Dashboard(): JSX.Element {
       <CssBaseline />
       <Grid item className={classes.drawerWrapper}>
         <ChatSideBanner loggedInUser={loggedInUser} />
+        <a href={'/mysitters'}>Setters</a>
       </Grid>
     </Grid>
   );
