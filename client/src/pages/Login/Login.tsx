@@ -46,7 +46,7 @@ export default function Login(): JSX.Element {
             <Grid container>
               <Grid item xs>
                 <Typography className={classes.welcome} component="h1" variant="h5">
-                  Welcome back!
+                  Sign In
                 </Typography>
               </Grid>
             </Grid>

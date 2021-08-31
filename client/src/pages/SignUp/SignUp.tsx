@@ -6,10 +6,18 @@ import { FormikHelpers } from 'formik';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import register from '../../helpers/APICalls/register';
+import login from '../../helpers/APICalls/login';
 import SignUpForm from './SignUpForm/SignUpForm';
 import AuthHeader from '../../components/AuthHeader/AuthHeader';
 import { useAuth } from '../../context/useAuthContext';
 import { useSnackBar } from '../../context/useSnackbarContext';
+
+interface Payload {
+  email: string;
+  password: string;
+  username: string;
+  demo_user?: boolean;
+}
 
 export default function Register(): JSX.Element {
   const classes = useStyles();
@@ -17,9 +25,25 @@ export default function Register(): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
 
   const handleSubmit = (
-    { username, email, password }: { email: string; password: string; username: string },
+    { username, email, password, demo_user }: Payload,
     { setSubmitting }: FormikHelpers<{ email: string; password: string; username: string }>,
   ) => {
+    if (demo_user) {
+      login(email, password).then((data) => {
+        if (data.error) {
+          setSubmitting(false);
+          updateSnackBarMessage(data.error.message);
+        } else if (data.success) {
+          updateLoginContext(data.success);
+        } else {
+          // should not get here from backend but this catch is for an unknown issue
+          console.error({ data });
+
+          setSubmitting(false);
+          updateSnackBarMessage('An unexpected error occurred. Please try again');
+        }
+      });
+    }
     register(username, email, password).then((data) => {
       if (data.error) {
         console.error({ error: data.error.message });
@@ -47,7 +71,7 @@ export default function Register(): JSX.Element {
             <Grid container>
               <Grid item xs>
                 <Typography className={classes.welcome} component="h1" variant="h5">
-                  Create an account
+                  Sign Up
                 </Typography>
               </Grid>
             </Grid>
